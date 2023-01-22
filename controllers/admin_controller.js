@@ -3,8 +3,20 @@ const { Admin } = require("../models/Admin");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
+const adminView = (req, res) => {
+    if(req.isAuthenticated()) {
+        res.redirect("/admin/dashboard");
+    } else {
+        res.redirect("/admin/login");
+    }
+}
+
 const adminLoginView = (req, res) => {
-    res.render("admin/admin_login");
+    if(req.isAuthenticated()) {
+        res.redirect("/admin/dashboard");
+    } else {
+        res.render("admin/admin_login");
+    }
 }
 
 const adminLogin = (req, res) => {
@@ -29,7 +41,7 @@ const adminLogin = (req, res) => {
 
 const adminDashboard = (req, res) => {
     if(req.isAuthenticated()) {
-        res.render("admin/admin_dashboard", {user: req.user});
+        res.render("admin/admin_dashboard", {user: req.user, pageName: "dashboard"});
     } else {
         res.redirect("/admin/login");
     }
@@ -37,7 +49,11 @@ const adminDashboard = (req, res) => {
 }
 
 const adminPost = (req, res) => {
-    res.render("admin/admin_post");
+    if(req.isAuthenticated()) {
+        res.render("admin/admin_post", {user: req.user, pageName: "post"});
+    } else {
+        res.redirect("/admin/login");
+    }
 }
 
 const adminLogout = (req, res) => {
@@ -56,4 +72,5 @@ module.exports = {
     adminDashboard,
     adminPost,
     adminLogout,
+    adminView,
 }

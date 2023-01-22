@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { adminLoginView, adminLogin, adminDashboard, adminPost, adminLogout } = require("../controllers/admin_controller");
+const { adminLoginView, adminLogin, adminDashboard, adminPost, adminLogout, adminView } = require("../controllers/admin_controller");
 
 
+router.get("/", adminView);
 router.get("/login", adminLoginView);
 router.post("/login", adminLogin);
 router.get("/dashboard", adminDashboard);

@@ -4,10 +4,11 @@
             <img src="/images/logo.png" width="44" height="34" alt="logo-img">
         </a>
 
+        
         <div class="navbar-nav me-auto">
-            <a href="/" class="nav-link">Home</a>
-            <a href="/news" class="nav-link">News</a>
-            <a href="/tutorials" class="nav-link">Tutorials</a>
+            <a href="/" class="nav-link <%= pageName === "home" ? "active" : ""  %>">Home</a>
+            <a href="/news" class="nav-link <%= pageName === "news" ? "active" : ""  %></a>">News</a>
+            <a href="/tutorials" class="nav-link <%= pageName === "tutorials" ? "active" : ""  %></a>">Tutorials</a>
         </div>
         
         <form class="d-flex me-2" role="search">
