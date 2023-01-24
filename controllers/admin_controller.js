@@ -3,6 +3,7 @@ const { Admin } = require("../models/Admin");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
+
 const adminView = (req, res) => {
     if(req.isAuthenticated()) {
         res.redirect("/admin/dashboard");
@@ -22,6 +23,8 @@ const adminLoginView = (req, res) => {
 const adminLogin = (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
+    
+
 
     const admin = new Admin({
         email: email,
@@ -56,6 +59,20 @@ const adminPost = (req, res) => {
     }
 }
 
+const adminAddPost = (req, res) => {
+    if(req.isAuthenticated()) {
+        res.render("admin/admin_add_post", {user: req.user, pageName: "post"});
+    } else {
+        res.redirect("/admin/login");
+    } 
+}
+
+const adminAddedPost = (req, res) => {
+    
+    console.log(req.body.content);
+
+}
+
 const adminLogout = (req, res) => {
     req.logout((err) => {
         if(err) {
@@ -66,6 +83,16 @@ const adminLogout = (req, res) => {
     })
 }
 
+const adminUsersView = (req, res) => {
+    if(req.isAuthenticated()) {
+        res.render("admin/admin_user", {pageName: "users"});
+    } else {
+        res.redirect("/admin/login");
+    }
+}
+
+
+
 module.exports = {
     adminLoginView,
     adminLogin,
@@ -73,4 +100,7 @@ module.exports = {
     adminPost,
     adminLogout,
     adminView,
+    adminUsersView,
+    adminAddPost,
+    adminAddedPost,
 }

@@ -1,0 +1,13 @@
+<%- include("../partials/dashboard/dashboard_header") %> 
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2"> Add Post</h1>
+</div>
+
+<form action="/admin/dashboard/post/add-post" method="post">
+    <input id="x" type="hidden" name="content">
+    <trix-editor input="x"></trix-editor>
+    <button class="btn btn-primary" type="submit">Add Post</button>
+</form>
+
+<%- include("../partials/dashboard/dashboard_footer") %> 

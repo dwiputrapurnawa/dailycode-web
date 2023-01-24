@@ -8,6 +8,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const { Admin } = require("../dailycode-web/models/Admin");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+const cookieParser = require("cookie-parser");
 
 const homeRoute = require("../dailycode-web/routes/home");
 const adminRoute = require("../dailycode-web/routes/admin");
@@ -26,6 +27,7 @@ mongoose.connect(process.env.DB_URI).then(() => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static("public"));
+app.use(cookieParser());
 
 app.use(session({
     secret: process.env.SECRET_KEY,

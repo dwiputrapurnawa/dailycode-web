@@ -1,17 +1,9 @@
 const mongoose = require("mongoose");
 
 const adminSchema = new mongoose.Schema({
-    email: {
-        type: String,
-        require: true,
-    },
-    password: {
-        type: String,
-        required: true,
-    },
-    fullname: {
-        type: String,
-    }
+    email: String,
+    password: String,
+    fullname: String
 });
 
 const Admin = mongoose.model("Admin", adminSchema);
