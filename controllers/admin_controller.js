@@ -1,7 +1,21 @@
 const passport = require("passport");
 const { Admin } = require("../models/Admin");
+const Post = require("../models/Post");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, './uploads');
+    },
+    filename: function(req, file, cb) {
+        cb(null, file.originalname);
+    }
+});
+
+const upload = multer({ storage: storage }).single("thumbnail");
 
 
 const adminView = (req, res) => {
@@ -67,9 +81,38 @@ const adminAddPost = (req, res) => {
     } 
 }
 
-const adminAddedPost = (req, res) => {
+const adminAddNewPost = (req, res) => {
     
-    console.log(req.body.content);
+    upload(req, res, (err) => {
+        if(err) {
+            console.log(err);
+        } else {
+            
+            const title = req.body.title;
+            const thumbnailPath = req.file.path;
+            const content = req.body.content;
+            const tagsRaw = req.body.tag;
+            const tagsArr = tagsRaw.split(",");
+
+            const newPost = new Post({
+                title: title,
+                content: content,
+                img: thumbnailPath,
+                author: req.user.fullname,
+                tags: tagsArr,
+            });
+
+            newPost.save((err) => {
+                if(err) {
+                    console.log(err);
+                } else {
+                    console.log("Successfully added new post");
+                    res.redirect("/admin/dashboard/post/add-post");
+                }
+            });
+
+        }
+    })
 
 }
 
@@ -102,5 +145,5 @@ module.exports = {
     adminView,
     adminUsersView,
     adminAddPost,
-    adminAddedPost,
+    adminAddNewPost,
 }
