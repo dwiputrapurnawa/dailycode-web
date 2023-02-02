@@ -6,16 +6,16 @@ const saltRounds = 10;
 
 const multer = require("multer");
 
-const storage = multer.diskStorage({
+const thumbnailStorage = multer.diskStorage({
     destination: function(req, file, cb) {
-        cb(null, './uploads');
+        cb(null, './uploads/thumbnails');
     },
     filename: function(req, file, cb) {
         cb(null, file.originalname);
     }
 });
 
-const upload = multer({ storage: storage }).single("thumbnail");
+const upload = multer({ storage: thumbnailStorage }).single("thumbnail");
 
 
 const adminView = (req, res) => {
