@@ -4,6 +4,8 @@
   <h1 class="h2">Post List</h1>
 </div>
 
+<a class="act-btn" href="/admin/dashboard/post/add-post">+</a>
+
 <div class="input-group mb-3">
   <input class="form-control" type="text" name="search" id="search">
   <button class="btn btn-outline-secondary" type="button">Search</button>
@@ -46,21 +48,42 @@
             Edit
           </a>
   
-          <a class="btn btn-danger action-button" href="/admin/dashboard/post/delete/<%= post._id %>">
+
+          <button class="btn btn-danger action-button" data-bs-toggle="modal" data-bs-target="#<%= post._id %>">
             <span data-feather="delete"></span>
             Delete
-          </a>
+          </button>
+          
+          <div class="modal" tabindex="-1" id="<%= post._id %>">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Delete Post</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <p>Are you sure?</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                  <form action="/admin/dashboard/post/delete/<%= post._id %>" method="post">
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-
-        
-
       </td>
     </tr>
    <% }) %>
   </tbody>
 </table>
 
-<a class="btn btn-primary" href="/admin/dashboard/post/add-post">Add Post</a>
+
+
+
+
 
 <%- include("../partials/dashboard/dashboard_footer") %> 
 

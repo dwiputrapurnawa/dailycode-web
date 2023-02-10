@@ -140,6 +140,44 @@ const adminUsersView = (req, res) => {
     }
 }
 
+const adminDeletePost = (req, res) => {
+    if(req.isAuthenticated()) {
+        const postId = req.params.postId;
+
+        Post.findByIdAndDelete(postId, (err) => {
+            if(err) {
+                console.log(err);
+            } else {
+                console.log("Successfully deleted post with ID: " + postId);
+
+                res.redirect("/admin/dashboard/post");
+            }
+        })
+
+    } else {
+        res.redirect("/admin/login");
+    }
+}
+
+const adminEditPost = (req, res) => {
+    if(req.isAuthenticated()) {
+        const postId = req.params.postId;
+
+        Post.findById(postId, (err, foundPost) => {
+            if(err) {
+                console.log(err);
+            } else {
+                if(foundPost) {
+                    
+                    res.render("admin/admin_edit_post", {pageName: "post", post: foundPost});
+                }
+            }
+        })
+    } else {
+        res.redirect("/admin/login");
+    }
+}
+
 
 
 module.exports = {
@@ -152,4 +190,6 @@ module.exports = {
     adminUsersView,
     adminAddPost,
     adminAddNewPost,
+    adminDeletePost,
+    adminEditPost,
 }

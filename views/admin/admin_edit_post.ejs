@@ -1,0 +1,39 @@
+<%- include("../partials/dashboard/dashboard_header") %> 
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2"> Edit Post</h1>
+</div>
+
+
+<form action="/admin/dashboard/post/add-post" method="post" enctype="multipart/form-data">
+
+  <img id="preview-img" src="<%= post.img.substring(7) %>" width="300" height="300">
+
+  
+  <div class="row mb-3">
+    <div class="col">
+      <label for="title" class="form-label">Title</label>
+      <input type="text" name="title" id="title" class="form-control" placeholder="" value="<%= post.title %>" required>
+    </div>
+    <div class="col">
+      <label for="thumbnail" class="form-label">Thumbnail</label>
+      <input class="form-control" type="file" id="thumbnail" name="thumbnail" value="<%= post.img %>" required>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="tag">Tags</label>
+    <input class="form-control" type="text" name="tag" id="tag" value="<%= post.tags %>" required>
+  </div>
+  
+  <div class="mb-3">
+    <label for="content">Content</label>
+    <input id="content" type="hidden" name="content" value="<%= post.content %>" required>
+    <trix-editor input="content"></trix-editor>
+  </div>
+
+    
+    <button class="btn btn-primary" type="submit">Save Post</button>
+</form>
+
+<%- include("../partials/dashboard/dashboard_footer") %> 
