@@ -67,7 +67,13 @@ const adminDashboard = (req, res) => {
 
 const adminPost = (req, res) => {
     if(req.isAuthenticated()) {
-        res.render("admin/admin_post", {user: req.user, pageName: "post"});
+        Post.find({}, (err, posts) => {
+            if(err) {
+                console.log(err);
+            } else {
+                res.render("admin/admin_post", {user: req.user, pageName: "post", posts: posts});
+            }
+        })
     } else {
         res.redirect("/admin/login");
     }

@@ -13,22 +13,22 @@
   <div class="row mb-3">
     <div class="col">
       <label for="title" class="form-label">Title</label>
-      <input type="text" name="title" id="title" class="form-control">
+      <input type="text" name="title" id="title" class="form-control" placeholder="" required>
     </div>
     <div class="col">
       <label for="thumbnail" class="form-label">Thumbnail</label>
-      <input class="form-control" type="file" id="thumbnail" name="thumbnail">
+      <input class="form-control" type="file" id="thumbnail" name="thumbnail" required>
     </div>
   </div>
 
   <div class="mb-3">
     <label for="tag">Tags</label>
-    <input class="form-control" type="text" name="tag" id="tag">
+    <input class="form-control" type="text" name="tag" id="tag" required>
   </div>
   
   <div class="mb-3">
     <label for="content">Content</label>
-    <input id="content" type="hidden" name="content">
+    <input id="content" type="hidden" name="content" required>
     <trix-editor input="content"></trix-editor>
   </div>
 

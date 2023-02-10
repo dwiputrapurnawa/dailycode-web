@@ -1,8 +1,64 @@
 <%- include("../partials/dashboard/dashboard_header") %> 
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-  <h1 class="h2">Post</h1>
+  <h1 class="h2">Post List</h1>
 </div>
+
+<div class="input-group mb-3">
+  <input class="form-control" type="text" name="search" id="search">
+  <button class="btn btn-outline-secondary" type="button">Search</button>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Title</th>
+      <th scope="col">Tags</th>
+      <th scope="col">Content</th>
+      <th scope="col">Author</th>
+      <th scope="col">Created At</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+   <% posts.forEach(post => { %>
+    <tr>
+      <td class="title"><%= post.title %> </td>
+      <td>
+        <% post.tags.forEach(tag => { %>
+         
+          <span class="badge text-bg-primary"><%= tag %></span>
+        <% }) %>
+      </td>
+      <td><%- post.content.substring(0, 100) + " ..." %>  </td>
+      <td><%= post.author %> </td>
+      <td><%= post.createdAt.toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"}) %> </td>
+      <td>
+
+        <div class="row">
+          <a class="btn btn-primary action-button" href="/post/<%= post._id %>" >
+            <span data-feather="eye"></span>
+            View
+          </a>
+  
+          <a class="btn btn-success action-button" href="/admin/dashboard/post/edit/<%= post._id %>">
+            <span data-feather="edit"></span>
+            Edit
+          </a>
+  
+          <a class="btn btn-danger action-button" href="/admin/dashboard/post/delete/<%= post._id %>">
+            <span data-feather="delete"></span>
+            Delete
+          </a>
+        </div>
+
+        
+
+      </td>
+    </tr>
+   <% }) %>
+  </tbody>
+</table>
 
 <a class="btn btn-primary" href="/admin/dashboard/post/add-post">Add Post</a>
 

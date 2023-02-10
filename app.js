@@ -27,6 +27,7 @@ mongoose.connect(process.env.DB_URI).then(() => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static("public"));
+app.use(express.static("uploads"));
 app.use(cookieParser());
 
 app.use(session({

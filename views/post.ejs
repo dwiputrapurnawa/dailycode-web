@@ -1,0 +1,14 @@
+<%- include("partials/header") %> 
+<%- include("partials/navbar") %> 
+
+
+<div class="container-xxl content">
+    <img src="<%= post.img.substring(7)  %>" alt="post-img" class="thumbnail"> 
+    <h1><%= post.title %></h1>
+    <p><%= post.createdAt.toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"}) %></p>
+
+    <%- post.content %>
+</div>
+
+
+<%- include("partials/footer") %> 
