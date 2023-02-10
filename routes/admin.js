@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { adminLoginView, adminLogin, adminDashboard, adminPost, adminLogout, adminView, adminUsersView, adminAddPost, adminAddNewPost, adminDeletePost, adminEditPost } = require("../controllers/admin_controller");
+const { adminLoginView, adminLogin, adminDashboard, adminPost, adminLogout, adminView, adminUsersView, adminAddPost, adminAddNewPost, adminDeletePost, adminEditPost, adminEditSave, } = require("../controllers/admin_controller");
 
 
 router.get("/", adminView);
@@ -14,5 +14,6 @@ router.get("/logout", adminLogout);
 router.get("/dashboard/users", adminUsersView);
 router.post("/dashboard/post/delete/:postId", adminDeletePost);
 router.get("/dashboard/post/edit/:postId", adminEditPost);
+router.post("/dashboard/post/edit-post", adminEditSave);
 
 module.exports = router;

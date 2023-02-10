@@ -5,7 +5,7 @@
 </div>
 
 
-<form action="/admin/dashboard/post/add-post" method="post" enctype="multipart/form-data">
+<form action="/admin/dashboard/post/edit-post" method="post" enctype="multipart/form-data">
 
   <img id="preview-img" src="<%= post.img.substring(7) %>" width="300" height="300">
 
@@ -13,24 +13,26 @@
   <div class="row mb-3">
     <div class="col">
       <label for="title" class="form-label">Title</label>
-      <input type="text" name="title" id="title" class="form-control" placeholder="" value="<%= post.title %>" required>
+      <input type="text" name="title" id="title" class="form-control" placeholder="" value="<%= post.title %>" >
     </div>
     <div class="col">
       <label for="thumbnail" class="form-label">Thumbnail</label>
-      <input class="form-control" type="file" id="thumbnail" name="thumbnail" value="<%= post.img %>" required>
+      <input class="form-control" type="file" id="thumbnail" name="thumbnail" value="<%= post.img %>" >
     </div>
   </div>
 
   <div class="mb-3">
     <label for="tag">Tags</label>
-    <input class="form-control" type="text" name="tag" id="tag" value="<%= post.tags %>" required>
+    <input class="form-control" type="text" name="tag" id="tag" value="<%= post.tags %>" >
   </div>
   
   <div class="mb-3">
     <label for="content">Content</label>
-    <input id="content" type="hidden" name="content" value="<%= post.content %>" required>
+    <input id="content" type="hidden" name="content" value="<%= post.content %>" >
     <trix-editor input="content"></trix-editor>
   </div>
+
+  <input type="hidden" name="postId" value="<%= post._id %>">
 
     
     <button class="btn btn-primary" type="submit">Save Post</button>

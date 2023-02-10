@@ -178,6 +178,69 @@ const adminEditPost = (req, res) => {
     }
 }
 
+const adminEditSave = (req, res) => {
+    if(req.isAuthenticated()) {
+
+        upload(req, res, (err) => {
+            if(err) {
+                console.log(err);
+            } else {
+                if(req.file) {
+
+                    const thumbnailPath = req.file.path;
+                    const title = req.body.title;
+                    const tags = req.body.tag;
+                    const tagsArr = tags.split(",");
+                    const content = req.body.content;
+                    const postId = req.body.postId;
+
+                    const updateField = {
+                        title: title,
+                        tags: tagsArr,
+                        content: content,
+                        img: thumbnailPath,
+                    }
+
+                    Post.findByIdAndUpdate(postId, updateField, (err) => {
+                        if(err) {
+                            console.log(err);
+                        } else {
+                            console.log("Successfully updated post with ID: " + postId);
+                            res.redirect("/admin/dashboard/post");
+                        }
+                    })
+
+                } else {
+        
+                    const title = req.body.title;
+                    const tags = req.body.tag;
+                    const tagsArr = tags.split(",");
+                    const content = req.body.content;
+                    const postId = req.body.postId;
+
+                    const updateField = {
+                        title: title,
+                        tags: tagsArr,
+                        content: content,
+                    }
+
+                    Post.findByIdAndUpdate(postId, updateField, (err) => {
+                        if(err) {
+                            console.log(err);
+                        } else {
+                            console.log("Successfully updated post with ID: " + postId);
+                            res.redirect("/admin/dashboard/post");
+                        }
+                    })
+                }
+            }
+        })
+
+    } else {
+        res.redirect("/admin/login");
+    }
+}
+
 
 
 module.exports = {
@@ -192,4 +255,5 @@ module.exports = {
     adminAddNewPost,
     adminDeletePost,
     adminEditPost,
+    adminEditSave,
 }
