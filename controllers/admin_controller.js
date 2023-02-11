@@ -1,6 +1,7 @@
 const passport = require("passport");
 const { Admin } = require("../models/Admin");
 const Post = require("../models/Post");
+const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
@@ -67,13 +68,28 @@ const adminDashboard = (req, res) => {
 
 const adminPost = (req, res) => {
     if(req.isAuthenticated()) {
-        Post.find({}, (err, posts) => {
-            if(err) {
-                console.log(err);
-            } else {
-                res.render("admin/admin_post", {user: req.user, pageName: "post", posts: posts});
-            }
-        })
+
+        if(req.query.search) {
+
+            Post.find({title: {$regex: req.query.search, $options: "i"}}, (err, posts) => {
+                if(err) {
+                    console.log(err);
+                } else {
+                    res.render("admin/admin_post", {pageName: "post", posts: posts});
+                }
+            })
+
+        } else {
+            Post.find({}, (err, posts) => {
+                if(err) {
+                    console.log(err);
+                } else {
+                    res.render("admin/admin_post", {pageName: "post", posts: posts});
+                }
+            })
+        }
+
+        
     } else {
         res.redirect("/admin/login");
     }
@@ -134,7 +150,31 @@ const adminLogout = (req, res) => {
 
 const adminUsersView = (req, res) => {
     if(req.isAuthenticated()) {
-        res.render("admin/admin_user", {pageName: "users"});
+
+        if(req.query.search) {
+            
+            User.find({username: {$regex: req.query.search, $options: 'i'}}, (err, foundUsers) => {
+                if(err) {
+                    console.log(err);
+                } else {
+                    if(foundUsers) {
+                        res.render("admin/admin_user", {pageName: "users", users: foundUsers});
+                    }
+                }
+            })
+
+        } else {
+            User.find({}, (err, foundUsers) => {
+                if(err) {
+                    console.log(err);
+                } else {
+                    if(foundUsers) {
+                        res.render("admin/admin_user", {pageName: "users", users: foundUsers});
+                    }
+                }
+            })
+        }
+        
     } else {
         res.redirect("/admin/login");
     }
@@ -241,6 +281,135 @@ const adminEditSave = (req, res) => {
     }
 }
 
+const adminAddUserView = (req, res) => {
+    res.render("admin/admin_add_user", {pageName: "users"});
+}
+
+const adminAddUser = (req, res) => {
+    if(req.isAuthenticated()) {
+        const username = req.body.username;
+        const fullname = req.body.fullname;
+        const email = req.body.email;
+        const password = req.body.password;
+
+        bcrypt.hash(password, saltRounds, (err, hash) => {
+            if(err) {
+                console.log(err);
+            } else {
+                const newUser = new User({
+                    username: username,
+                    fullname: fullname,
+                    email: email,
+                    password: hash
+                });
+
+                newUser.save((err) => {
+                    if(err) {
+                        console.log(err);
+                    } else {
+                        console.log("Successfully add new user");
+                        res.redirect("/admin/dashboard/users/add-user");
+                    }
+                })
+            }
+
+
+        })
+    } else {
+        res.redirect("/admin/login");
+    }
+}
+
+const adminDeleteUser = (req, res) => {
+    if(req.isAuthenticated()) {
+        const userId = req.params.userId;
+
+        User.findByIdAndDelete(userId, (err) => {
+            if(err) {
+                console.log(err);
+            } else {
+                console.log("Successfully deleted user with ID: " + userId);
+                res.redirect("/admin/dashboard/users");
+            }
+        })
+    }else {
+        res.redirect("/admin/login");
+    }
+}
+
+const adminEditUserView = (req, res) => {
+    if(req.isAuthenticated()) {
+    
+    const userId = req.params.userId;
+
+    User.findById(userId, (err, foundUser) => {
+
+        if(err) {
+            console.log(err);
+        } else {
+            if(foundUser) {
+                res.render("admin/admin_edit_user", {pageName: "users", user: foundUser})
+            }
+        }
+
+        
+    })
+    
+
+    } else {
+        res.redirect("/admin/login");
+    }
+}
+
+const adminEditUser = (req, res) => {
+    if(req.isAuthenticated()) {
+
+        const userId = req.params.userId;
+        const username = req.body.username;
+        const fullname = req.body.fullname;
+        
+        if(req.body.password) {
+            const password = req.body.password;
+
+            bcrypt.hash(password, saltRounds, (err, hash) => {
+
+                const userField = {
+                    username: username,
+                    fullname: fullname,
+                    password: hash,
+                }
+
+                User.findByIdAndUpdate(userId, userField, (err) => {
+                    if(err) {
+                        console.log(err);
+                    } else {
+                        console.log("Successfully updated user with ID: " + userId);
+                        res.redirect("/admin/dashboard/users");
+                    }
+                })
+            })
+        } else {
+            const userField = {
+                username: username,
+                fullname: fullname,
+            }
+
+            User.findByIdAndUpdate(userId, userField, (err) => {
+                if(err) {
+                    console.log(err);
+                } else {
+                    console.log("Successfully updated user with ID: " + userId);
+                    res.redirect("/admin/dashboard/users");
+                }
+            })
+
+        }
+
+    } else {
+        res.redirect("/admin/login")
+    }
+}
+
 
 
 module.exports = {
@@ -256,4 +425,9 @@ module.exports = {
     adminDeletePost,
     adminEditPost,
     adminEditSave,
+    adminAddUserView,
+    adminAddUser,
+    adminDeleteUser,
+    adminEditUserView,
+    adminEditUser,
 }
