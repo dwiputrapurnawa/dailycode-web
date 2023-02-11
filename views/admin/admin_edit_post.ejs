@@ -5,7 +5,7 @@
 </div>
 
 
-<form action="/admin/dashboard/post/edit-post" method="post" enctype="multipart/form-data">
+<form class="mb-3" action="/admin/dashboard/post/edit-post" method="post" enctype="multipart/form-data">
 
   <img id="preview-img" src="<%= post.img.substring(7) %>" width="300" height="300">
 
@@ -35,7 +35,10 @@
   <input type="hidden" name="postId" value="<%= post._id %>">
 
     
-    <button class="btn btn-primary" type="submit">Save Post</button>
+    <button class="btn btn-primary" type="submit">
+      <span data-feather="save"></span>
+      Save Changes
+    </button>
 </form>
 
 <%- include("../partials/dashboard/dashboard_footer") %> 

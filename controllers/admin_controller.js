@@ -59,7 +59,32 @@ const adminLogin = (req, res) => {
 
 const adminDashboard = (req, res) => {
     if(req.isAuthenticated()) {
-        res.render("admin/admin_dashboard", {user: req.user, pageName: "dashboard"});
+
+        let userCount = 0;
+        let postCount = 0;
+
+        User.countDocuments({}, (err, count) => {
+            if(err) {
+                console.log(err);
+            } else {
+                userCount = count;
+
+                Post.countDocuments({}, (err, count) => {
+                    if(err) {
+                        console.log(err);
+                    } else {
+                        postCount = count;
+
+                        res.render("admin/admin_dashboard", {user: req.user, pageName: "dashboard", userCount: userCount, postCount: postCount});
+                    }
+                })
+
+            }
+        })
+
+        
+
+        
     } else {
         res.redirect("/admin/login");
     }
@@ -69,17 +94,6 @@ const adminDashboard = (req, res) => {
 const adminPost = (req, res) => {
     if(req.isAuthenticated()) {
 
-        if(req.query.search) {
-
-            Post.find({title: {$regex: req.query.search, $options: "i"}}, (err, posts) => {
-                if(err) {
-                    console.log(err);
-                } else {
-                    res.render("admin/admin_post", {pageName: "post", posts: posts});
-                }
-            })
-
-        } else {
             Post.find({}, (err, posts) => {
                 if(err) {
                     console.log(err);
@@ -87,9 +101,7 @@ const adminPost = (req, res) => {
                     res.render("admin/admin_post", {pageName: "post", posts: posts});
                 }
             })
-        }
 
-        
     } else {
         res.redirect("/admin/login");
     }
@@ -151,19 +163,6 @@ const adminLogout = (req, res) => {
 const adminUsersView = (req, res) => {
     if(req.isAuthenticated()) {
 
-        if(req.query.search) {
-            
-            User.find({username: {$regex: req.query.search, $options: 'i'}}, (err, foundUsers) => {
-                if(err) {
-                    console.log(err);
-                } else {
-                    if(foundUsers) {
-                        res.render("admin/admin_user", {pageName: "users", users: foundUsers});
-                    }
-                }
-            })
-
-        } else {
             User.find({}, (err, foundUsers) => {
                 if(err) {
                     console.log(err);
@@ -173,7 +172,6 @@ const adminUsersView = (req, res) => {
                     }
                 }
             })
-        }
         
     } else {
         res.redirect("/admin/login");

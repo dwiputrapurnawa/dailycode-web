@@ -2,83 +2,83 @@
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
   <h1 class="h2">Post List</h1>
+  <a class="btn btn-primary mb-3" href="/admin/dashboard/post/add-post">
+    <span data-feather="plus"></span>
+    Add Post
+  </a>
 </div>
 
-<a class="act-btn" href="/admin/dashboard/post/add-post">+</a>
-
-<div class="input-group mb-3">
-  <input class="form-control" type="text" name="search" id="searchValue">
-  <button class="btn btn-outline-secondary" type="button" id="searchButton">Search</button>
-</div>
-
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">Title</th>
-      <th scope="col">Tags</th>
-      <th scope="col">Content</th>
-      <th scope="col">Author</th>
-      <th scope="col">Created At</th>
-      <th scope="col">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-   <% posts.forEach(post => { %>
-    <tr>
-      <td class="title"><%= post.title %> </td>
-      <td>
-        <% post.tags.forEach(tag => { %>
-         
-          <span class="badge text-bg-primary"><%= tag %></span>
-        <% }) %>
-      </td>
-      <td><%- post.content.substring(0, 100) + " ..." %>  </td>
-      <td><%= post.author %> </td>
-      <td><%= post.createdAt.toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"}) %> </td>
-      <td>
-
-        <div class="row">
-          <a class="btn btn-primary action-button" href="/post/<%= post._id %>" >
-            <span data-feather="eye"></span>
-            View
-          </a>
+<div class="mb-3">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Title</th>
+        <th scope="col">Tags</th>
+        <th scope="col">Content</th>
+        <th scope="col">Author</th>
+        <th scope="col">Created At</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+     <% posts.forEach(post => { %>
+      <tr>
+        <td class="title"><%= post.title %> </td>
+        <td>
+          <% post.tags.forEach(tag => { %>
+           
+            <span class="badge text-bg-primary"><%= tag %></span>
+          <% }) %>
+        </td>
+        <td><%- post.content.substring(0, 100) + " ..." %>  </td>
+        <td><%= post.author %> </td>
+        <td><%= post.createdAt.toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"}) %> </td>
+        <td>
   
-          <a class="btn btn-success action-button" href="/admin/dashboard/post/edit/<%= post._id %>">
-            <span data-feather="edit"></span>
-            Edit
-          </a>
+          <div class="row">
+            <a class="btn btn-primary action-button" href="/post/<%= post._id %>" >
+              <span data-feather="eye"></span>
+              View
+            </a>
+    
+            <a class="btn btn-success action-button" href="/admin/dashboard/post/edit/<%= post._id %>">
+              <span data-feather="edit"></span>
+              Edit
+            </a>
+    
   
-
-          <button class="btn btn-danger action-button" data-bs-toggle="modal" data-bs-target="#<%= post._id %>">
-            <span data-feather="delete"></span>
-            Delete
-          </button>
-          
-          <div class="modal" tabindex="-1" id="<%= post._id %>">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Delete Post</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <p>Are you sure?</p>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                  <form action="/admin/dashboard/post/delete/<%= post._id %>" method="post">
-                    <button type="submit" class="btn btn-primary">Yes</button>
-                  </form>
+            <button class="btn btn-danger action-button" data-bs-toggle="modal" data-bs-target="#<%= post._id %>">
+              <span data-feather="delete"></span>
+              Delete
+            </button>
+            
+            <div class="modal" tabindex="-1" id="<%= post._id %>">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Delete Post</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p>Are you sure?</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <form action="/admin/dashboard/post/delete/<%= post._id %>" method="post">
+                      <button type="submit" class="btn btn-primary">Yes</button>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </td>
-    </tr>
-   <% }) %>
-  </tbody>
-</table>
+        </td>
+      </tr>
+     <% }) %>
+    </tbody>
+  </table>
+</div>
+
 
 
 

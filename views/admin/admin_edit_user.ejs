@@ -4,26 +4,43 @@
     <h1 class="h2">Edit User</h1>
 </div>
 
-<form action="/admin/dashboard/users/edit/<%= user._id %>" method="post">
-<div class="mb-3">
-    <label class="form-label" for="username">Username</label>
-    <input class="form-control" type="text" name="username" id="username" value="<%= user.username %>">
+<form class="mb-3" action="/admin/dashboard/users/edit/<%= user._id %>" method="post">
+
+<div class="row">
+    <div class="col mb-3">
+        <label class="form-label" for="username">Username</label>
+        <input class="form-control" type="text" name="username" id="username" value="<%= user.username %>">
+    </div>
+    <div class="col mb-3">
+        <label class="form-label" for="fullname">Fullname</label>
+        <input class="form-control" type="text" name="fullname" id="fullname" value="<%= user.fullname %>">
+    </div>
 </div>
-<div class="mb-3">
-    <label class="form-label" for="fullname">Fullname</label>
-    <input class="form-control" type="text" name="fullname" id="fullname" value="<%= user.fullname %>">
-</div>
+
+
 <div class="mb-3">
     <label class="form-label" for="email">Email</label>
     <input class="form-control" type="email" name="email" id="email" disabled value="<%= user.email %>">
 </div>
-<div class="mb-3">
-    <label class="form-label" for="password">New Password</label>
-    <input class="form-control" type="password" name="password" id="password">
+
+<div class="row">
+    <div class="col mb-3">
+        <label class="form-label" for="password">New Password</label>
+        <input class="form-control" type="password" name="password" id="password">
+    </div>
+    <div class="col mb-3">
+        <label class="form-label" for="confirmPassword">Confirm New Password</label>
+        <input class="form-control" type="password" name="confirmPassword" id="confirmPassword">
+    </div>
 </div>
 
+
+
 <div class="mb-3">
-    <button class="btn btn-primary" type="submit">Save User</button>
+    <button class="btn btn-primary" type="submit" id="saveChangesButton">
+        <span data-feather="save"></span>
+        Save Changes
+    </button>
 </div>
 </form>
 
