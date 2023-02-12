@@ -1,0 +1,130 @@
+<%- include("../partials/dashboard/dashboard_header") %>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"> Admin Management</h1>
+  </div>
+
+<div class="mb-5">
+  <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#editDataAdmin">
+    <span data-feather="edit"></span>
+    Edit Your Data
+  </button>
+  <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#addNewAdmin"  <%- user.role === "Admin" ? "disabled" : "" %> >
+    <span data-feather="plus"></span>
+    Add New Admin
+  </button>
+</div>
+
+
+<table class="table">
+<thead>
+<tr>
+  <th scope="col">Email</th>
+  <th scope="col">Fullname</th>
+  <th scope="col">Role</th>
+</tr>
+</thead>
+<tbody>
+<% admins.forEach(admin => { %>
+  <tr>
+    <td><%= admin.email %></td>
+    <td><%= admin.fullname %></td>
+    <td><%= admin.role %></td>
+  </tr>
+<% }) %>
+</tbody>
+</table>
+
+
+<div class="modal fade" tabindex="-1" id="editDataAdmin">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Data</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/admin/dashboard/admin-management/edit" method="post">
+        <div class="modal-body">
+          <label class="form-label" for="email">Email</label>
+          <input class="form-control mb-3" type="email" name="email" id="email" value="<%= user.email %>" disabled>
+          <label class="form-label" for="fullname">Fullname</label>
+          <input class="form-control mb-3" type="text" name="fullname" id="fullname" value="<%= user.fullname %>">
+          <label class="form-label" for="role">Role</label>
+          <input class="form-control mb-3" type="text" name="role" id="role" value="<%= user.role %>" disabled>
+
+          <div class="row">
+            <div class="col">
+              <label class="form-label" for="password">New Password</label>
+              <input class="form-control mb-3" type="password" name="password" id="password">
+            </div>
+            <div class="col">
+              <label class="form-label" for="confirmPassword">Confirm New Password</label>
+              <input class="form-control mb-3" type="password" name="confirmPassword" id="confirmPassword">
+            </div>
+          </div>
+
+          <input type="hidden" name="adminId" value="<%= user.id %>">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <span data-feather="x"></span>
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary" id="saveChangesButton">
+            <span data-feather="save"></span>
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" tabindex="-1" id="addNewAdmin">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add New Admin</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/admin/dashboard/admin-management/add-admin" method="post">
+        <div class="modal-body">
+          <label class="form-label" for="email">Email</label>
+          <input class="form-control mb-3" type="email" name="email" id="email">
+          <label class="form-label" for="fullname">Fullname</label>
+          <input class="form-control mb-3" type="text" name="fullname" id="fullname">
+          <label class="form-label" for="role">Role</label>
+          <select class="form-select mb-3" name="role" id="role">
+            <option value="Admin">Admin</option>
+            <option value="Super Admin">Super Admin</option>
+          </select>
+
+          <div class="row">
+            <div class="col">
+              <label class="form-label" for="password">Password</label>
+              <input class="form-control mb-3" type="password" name="password" id="password">
+            </div>
+            <div class="col">
+              <label class="form-label" for="confirmPassword">Confirm Password</label>
+              <input class="form-control mb-3" type="password" name="confirmPassword" id="confirmPassword">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <span data-feather="x"></span>
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary" id="saveChangesButton">
+            <span data-feather="save"></span>
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<%- include("../partials/dashboard/dashboard_footer") %>

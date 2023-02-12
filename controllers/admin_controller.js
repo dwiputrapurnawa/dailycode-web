@@ -20,7 +20,7 @@ const upload = multer({ storage: thumbnailStorage }).single("thumbnail");
 
 
 const adminView = (req, res) => {
-    if(req.isAuthenticated()) {
+    if(req.isAuthenticated() && (req.user.role === "Admin" || req.user.role === "Super Admin")) {
         res.redirect("/admin/dashboard");
     } else {
         res.redirect("/admin/login");
@@ -28,7 +28,7 @@ const adminView = (req, res) => {
 }
 
 const adminLoginView = (req, res) => {
-    if(req.isAuthenticated()) {
+    if(req.isAuthenticated() && (req.user.role === "Admin" || req.user.role === "Super Admin")) {
         res.redirect("/admin/dashboard");
     } else {
         res.render("admin/admin_login");
@@ -58,31 +58,39 @@ const adminLogin = (req, res) => {
 }
 
 const adminDashboard = (req, res) => {
-    if(req.isAuthenticated()) {
+    if(req.isAuthenticated() && (req.user.role === "Admin" || req.user.role === "Super Admin")) {
 
         let userCount = 0;
         let postCount = 0;
 
-        User.countDocuments({}, (err, count) => {
+        Admin.findById(req.user.id, (err, foundUser) => {
             if(err) {
                 console.log(err);
             } else {
-                userCount = count;
-
-                Post.countDocuments({}, (err, count) => {
-                    if(err) {
-                        console.log(err);
-                    } else {
-                        postCount = count;
-
-                        res.render("admin/admin_dashboard", {user: req.user, pageName: "dashboard", userCount: userCount, postCount: postCount});
-                    }
-                })
-
+                if(foundUser) {
+                    User.countDocuments({}, (err, count) => {
+                        if(err) {
+                            console.log(err);
+                        } else {
+                            userCount = count;
+            
+                            Post.countDocuments({}, (err, count) => {
+                                if(err) {
+                                    console.log(err);
+                                } else {
+                                    postCount = count;
+            
+                                    res.render("admin/admin_dashboard", {user: foundUser, pageName: "dashboard", userCount: userCount, postCount: postCount});
+                                }
+                            })
+            
+                        }
+                    })
+                }
             }
         })
 
-        
+         
 
         
     } else {
@@ -92,7 +100,7 @@ const adminDashboard = (req, res) => {
 }
 
 const adminPost = (req, res) => {
-    if(req.isAuthenticated()) {
+    if(req.isAuthenticated() && (req.user.role === "Admin" || req.user.role === "Super Admin")) {
 
             Post.find({}, (err, posts) => {
                 if(err) {
@@ -108,7 +116,7 @@ const adminPost = (req, res) => {
 }
 
 const adminAddPost = (req, res) => {
-    if(req.isAuthenticated()) {
+    if(req.isAuthenticated() && (req.user.role === "Admin" || req.user.role === "Super Admin")) {
         res.render("admin/admin_add_post", {user: req.user, pageName: "post"});
     } else {
         res.redirect("/admin/login");
@@ -161,7 +169,7 @@ const adminLogout = (req, res) => {
 }
 
 const adminUsersView = (req, res) => {
-    if(req.isAuthenticated()) {
+    if(req.isAuthenticated() && (req.user.role === "Admin" || req.user.role === "Super Admin")) {
 
             User.find({}, (err, foundUsers) => {
                 if(err) {
@@ -179,7 +187,7 @@ const adminUsersView = (req, res) => {
 }
 
 const adminDeletePost = (req, res) => {
-    if(req.isAuthenticated()) {
+    if(req.isAuthenticated() && (req.user.role === "Admin" || req.user.role === "Super Admin")) {
         const postId = req.params.postId;
 
         Post.findByIdAndDelete(postId, (err) => {
@@ -198,7 +206,7 @@ const adminDeletePost = (req, res) => {
 }
 
 const adminEditPost = (req, res) => {
-    if(req.isAuthenticated()) {
+    if(req.isAuthenticated() && (req.user.role === "Admin" || req.user.role === "Super Admin")) {
         const postId = req.params.postId;
 
         Post.findById(postId, (err, foundPost) => {
@@ -217,7 +225,7 @@ const adminEditPost = (req, res) => {
 }
 
 const adminEditSave = (req, res) => {
-    if(req.isAuthenticated()) {
+    if(req.isAuthenticated() && (req.user.role === "Admin" || req.user.role === "Super Admin")) {
 
         upload(req, res, (err) => {
             if(err) {
@@ -280,11 +288,16 @@ const adminEditSave = (req, res) => {
 }
 
 const adminAddUserView = (req, res) => {
-    res.render("admin/admin_add_user", {pageName: "users"});
+    if(req.isAuthenticated() && req.user.role == "Admin") {
+        res.render("admin/admin_add_user", {pageName: "users"});
+    } else {
+        res.redirect("/admin/login");
+    }
+    
 }
 
 const adminAddUser = (req, res) => {
-    if(req.isAuthenticated()) {
+    if(req.isAuthenticated() && (req.user.role === "Admin" || req.user.role === "Super Admin")) {
         const username = req.body.username;
         const fullname = req.body.fullname;
         const email = req.body.email;
@@ -298,7 +311,8 @@ const adminAddUser = (req, res) => {
                     username: username,
                     fullname: fullname,
                     email: email,
-                    password: hash
+                    password: hash,
+                    role: "User"
                 });
 
                 newUser.save((err) => {
@@ -319,7 +333,7 @@ const adminAddUser = (req, res) => {
 }
 
 const adminDeleteUser = (req, res) => {
-    if(req.isAuthenticated()) {
+    if(req.isAuthenticated() && req.user.role == "Admin") {
         const userId = req.params.userId;
 
         User.findByIdAndDelete(userId, (err) => {
@@ -336,7 +350,7 @@ const adminDeleteUser = (req, res) => {
 }
 
 const adminEditUserView = (req, res) => {
-    if(req.isAuthenticated()) {
+    if(req.isAuthenticated() && req.user.role == "Admin") {
     
     const userId = req.params.userId;
 
@@ -360,7 +374,7 @@ const adminEditUserView = (req, res) => {
 }
 
 const adminEditUser = (req, res) => {
-    if(req.isAuthenticated()) {
+    if(req.isAuthenticated() && req.user.role == "Admin") {
 
         const userId = req.params.userId;
         const username = req.body.username;
@@ -408,6 +422,112 @@ const adminEditUser = (req, res) => {
     }
 }
 
+const adminManagementView = (req, res) => {
+    if(req.isAuthenticated() && (req.user.role === "Admin" || req.user.role === "Super Admin")) {
+
+        Admin.findById(req.user.id, (err, foundUser) => {
+            if(err) {
+                console.log(err);
+            } else {
+                if(foundUser) {
+                    Admin.find({}, (err, foundAdmins) => {
+                        if(err) {
+                            console.log(err);
+                        } else {
+                            if(foundAdmins) {
+                                res.render("admin/admin_management", {pageName: "admin", admins: foundAdmins, user: foundUser});
+                            }
+                        }
+                    })
+                }
+            }
+        })
+
+        
+
+    } else {
+        res.redirect("/admin/login");
+    }
+}
+
+const adminManagementEditData = (req, res) => {
+    if(req.isAuthenticated() && (req.user.role === "Admin" || req.user.role === "Super Admin")) {
+        const email = req.body.email;
+        const fullname = req.body.fullname;
+        const role = req.body.role;
+        const adminId = req.body.adminId;
+
+        if(req.body.password) {
+            const password = req.body.password;
+
+            bcrypt.hash(password, saltRounds, (err, hash) => {
+                const adminFields = {
+                    email: email,
+                    fullname: fullname,
+                    password: hash,
+                    role: role,
+                };
+
+                Admin.findByIdAndUpdate(adminId, adminFields, (err) => {
+                    if(err) {
+                        console.log(err);
+                    } else {
+                        console.log("Successfully updated admin with ID: " + adminId);
+                        res.redirect("/admin/dashboard/admin-management")
+                    }
+                });
+            });
+        } else {
+            const adminFields = {
+                email: email,
+                fullname: fullname,
+                role: role,
+            };
+
+            Admin.findByIdAndUpdate(adminId, adminFields, (err) => {
+                if(err) {
+                    console.log(err);
+                } else {
+                    console.log("Successfully updated admin with ID: " + adminId);
+                    res.redirect("/admin/dashboard/admin-management")
+                }
+            })
+
+        }
+    }
+}
+
+const adminManagementAddNewAdmin = (req, res) => {
+    if(req.isAuthenticated() && req.user.role === "Super Admin") {
+
+        const email = req.body.email;
+        const fullname = req.body.fullname;
+        const role = req.body.role;
+        const password = req.body.password;
+
+        bcrypt.hash(password, saltRounds, (err, hash) => {
+            const newAdmin = new Admin({
+                email: email,
+                fullname: fullname,
+                password: hash,
+                role: role,
+            });
+
+            newAdmin.save((err) => {
+                if(err) {
+                    console.log(err);
+                } else {
+                    console.log("Successfully added new admin");
+                    res.redirect("/admin/dashboard/admin-management");
+                }
+            })
+        })
+
+    } else {
+        res.redirect("/admin/login");
+    }
+}
+
 
 
 module.exports = {
@@ -428,4 +548,7 @@ module.exports = {
     adminDeleteUser,
     adminEditUserView,
     adminEditUser,
+    adminManagementView,
+    adminManagementEditData,
+    adminManagementAddNewAdmin,
 }
